@@ -28,12 +28,14 @@ day_translation = {
 }
 
 def parse_date(date_str: str) -> datetime:
-    """Parse date string from format like '16 Jun' to a datetime object."""
+    """Parse date string from format like '16 Jun' or 'Jan 1' to a datetime object."""
     try:
         return datetime.strptime(date_str + f" {datetime.now().year}", '%d %b %Y')
     except ValueError:
-        # Handle different date format if necessary
-        return datetime.strptime(date_str, '%d %b %Y')
+        try:
+            return datetime.strptime(date_str + f" {datetime.now().year}", '%b %d %Y')
+        except ValueError:
+            raise ValueError(f"Date format for '{date_str}' is not recognized")
 
 def normalize_holiday_name(name: str) -> str:
     """Normalize holiday names to group related holidays together."""
