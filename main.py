@@ -16,35 +16,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def fetch_holidays() -> List[Dict[str, str]]:
-    current_year = datetime.now().year
-    url = f"https://www.timeanddate.com/holidays/tunisia/{current_year}"
-    response = requests.get(url)
+def recuperer_jours_feries() -> List[Dict[str, str]]:
+    annee_actuelle = datetime.now().year
+    url = f"https://www.timeanddate.com/holidays/tunisia/{annee_actuelle}"
+    reponse = requests.get(url)
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
-        table = soup.find('table', {'id': 'holidays-table'})
-        rows = table.find_all('tr')
-        holidays = []
+    if reponse.status_code == 200:
+        soupe = BeautifulSoup(reponse.text, 'html.parser')
+        table = soupe.find('table', {'id': 'holidays-table'})
+        lignes = table.find_all('tr')
+        jours_feries = []
 
-        for row in rows[1:]:
-            date_column = row.find('th')
-            columns = row.find_all('td')
+        for ligne in lignes[1:]:
+            colonne_date = ligne.find('th')
+            colonnes = ligne.find_all('td')
 
-            if date_column and len(columns) >= 3:
-                date = date_column.get_text(strip=True)
-                day = columns[0].get_text(strip=True)
-                holiday_name = columns[1].get_text(strip=True)
-                holiday_type = columns[2].get_text(strip=True)
+            if colonne_date and len(colonnes) >= 3:
+                date = colonne_date.get_text(strip=True)
+                jour = colonnes[0].get_text(strip=True)
+                nom_jour_ferie = colonnes[1].get_text(strip=True)
+                type_jour_ferie = colonnes[2].get_text(strip=True)
 
-                holidays.append({
+                jours_feries.append({
                     'Date': date,
-                    'Day': day,
-                    'Name': holiday_name,
-                    'Type': holiday_type
+                    'Jour': jour,
+                    'Nom': nom_jour_ferie,
+                    'Type': type_jour_ferie
                 })
 
-        return holidays
+        return jours_feries
     else:
         return []
 
