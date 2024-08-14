@@ -29,12 +29,7 @@ day_translation = {
 
 def parse_date(date_str: str) -> datetime:
     """Parse date string from format like '16 Jun' to a datetime object."""
-    try:
-        print(f"Parsing date: {date_str}")
-        return datetime.strptime(date_str + f" {datetime.now().year}", '%d %b %Y')
-    except ValueError as e:
-        print(f"Error parsing date '{date_str}': {e}")
-        return None
+    return datetime.strptime(date_str + f" {datetime.now().year}", '%d %b %Y')
 
 def normalize_holiday_name(name: str) -> str:
     """Normalize holiday names to group related holidays together."""
@@ -64,9 +59,6 @@ def recuperer_jours_feries() -> List[Dict[str, str]]:
                 jour = colonnes[0].get_text(strip=True)
                 nom_jour_ferie = colonnes[1].get_text(strip=True)
 
-                # Debugging statements
-                print(f"Raw date from HTML: {date}")
-
                 # Skip "Ramadan Start"
                 if nom_jour_ferie == "Ramadan Start":
                     continue
@@ -75,15 +67,11 @@ def recuperer_jours_feries() -> List[Dict[str, str]]:
                 if jour in day_translation:
                     jour = day_translation[jour]
 
-                parsed_date = parse_date(date)
-                if parsed_date:
-                    jours_feries.append({
-                        'Date': parsed_date,
-                        'Jour': jour,
-                        'Nom': normalize_holiday_name(nom_jour_ferie),
-                    })
-                else:
-                    print(f"Failed to parse date: {date}")
+                jours_feries.append({
+                    'Date': parse_date(date),
+                    'Jour': jour,
+                    'Nom': normalize_holiday_name(nom_jour_ferie),
+                })
 
         # Group holidays by normalized name and date range
         grouped_holidays = []
@@ -120,7 +108,6 @@ def recuperer_jours_feries() -> List[Dict[str, str]]:
         return grouped_holidays
     else:
         return []
-
 
 @app.get("/api/holidays")
 def get_holidays():
