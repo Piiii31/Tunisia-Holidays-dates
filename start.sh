@@ -1,1 +1,2 @@
-Create a start.sh script to run the FastAPI application.
+#!/bin/bash
+uvicorn main:app --host 0.0.0.0 --port 8000
