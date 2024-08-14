@@ -1,0 +1,1 @@
+Create a start.sh script to run the FastAPI application.
