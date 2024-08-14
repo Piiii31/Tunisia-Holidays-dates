@@ -16,6 +16,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Dictionary to map English day names to French
+day_translation = {
+    "Monday": "Lundi",
+    "Tuesday": "Mardi",
+    "Wednesday": "Mercredi",
+    "Thursday": "Jeudi",
+    "Friday": "Vendredi",
+    "Saturday": "Samedi",
+    "Sunday": "Dimanche"
+}
+
 def recuperer_jours_feries() -> List[Dict[str, str]]:
     annee_actuelle = datetime.now().year
     url = f"https://www.timeanddate.com/holidays/tunisia/{annee_actuelle}"
@@ -35,13 +46,17 @@ def recuperer_jours_feries() -> List[Dict[str, str]]:
                 date = colonne_date.get_text(strip=True)
                 jour = colonnes[0].get_text(strip=True)
                 nom_jour_ferie = colonnes[1].get_text(strip=True)
-                type_jour_ferie = colonnes[2].get_text(strip=True)
+
+
+                # Translate the day name to French
+                if jour in day_translation:
+                    jour = day_translation[jour]
 
                 jours_feries.append({
                     'Date': date,
                     'Jour': jour,
                     'Nom': nom_jour_ferie,
-                    'Type': type_jour_ferie
+
                 })
 
         return jours_feries
@@ -50,5 +65,5 @@ def recuperer_jours_feries() -> List[Dict[str, str]]:
 
 @app.get("/api/holidays")
 def get_holidays():
-    holidays = fetch_holidays()
+    holidays = recuperer_jours_feries()
     return holidays
