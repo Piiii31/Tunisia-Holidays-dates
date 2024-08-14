@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup
 from typing import List, Dict
+from typing import Optional
 
 app = FastAPI()
 
@@ -27,9 +28,19 @@ day_translation = {
     "Sunday": "Dimanche"
 }
 
-def parse_date(date_str: str) -> datetime:
-    """Parse date string from format like '16 Jun' to a datetime object."""
-    return datetime.strptime(date_str + f" {datetime.now().year}", '%d %b %Y')
+def parse_date(date_str: str) -> Optional[datetime]:
+    """
+    Parse date string to datetime object.
+    Tries multiple formats to handle various date string formats.
+    """
+    formats = ['%d %b %Y', '%d %b', '%d %B %Y', '%d %B']
+    for fmt in formats:
+        try:
+            return datetime.strptime(date_str + f" {datetime.now().year}", fmt)
+        except ValueError:
+            continue
+    # If no format matched, return None or raise an error
+    raise ValueError(f"Date format for '{date_str}' is not recognized.")
 
 def normalize_holiday_name(name: str) -> str:
     """Normalize holiday names to group related holidays together."""
