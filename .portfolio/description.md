@@ -1,0 +1,1 @@
+The **Tunisia Holidays API** allows users to retrieve a list of public holidays in Tunisia, including their dates and significance. Built with FastAPI, this API is designed to be simple and efficient, providing reliable information that can be used for various applications, such as calendar integrations, event planning, and more.

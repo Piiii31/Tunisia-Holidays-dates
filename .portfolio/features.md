@@ -1,0 +1,4 @@
+- **Comprehensive Holiday Data**: Get details on all public holidays in Tunisia.
+- **Up-to-date Information**: The API is regularly updated to reflect the latest holiday data.
+- **Free to Use**: No cost associated with accessing the holiday information.
+- **Simple Integration**: Easy to integrate into your applications via RESTful API calls.
